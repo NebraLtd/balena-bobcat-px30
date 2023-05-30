@@ -3,8 +3,8 @@ deviceTypesCommon = require '@resin.io/device-types/common'
 
 module.exports =
 	version: 1
-	slug: 'smarc-px30'
-	name: 'I-Pi SMARC PX30 SD-CARD'
+	slug: 'bobcat-px30'
+	name: 'Bobcat PX30'
 	arch: 'aarch64'
 	state: 'released'
 	community: true
@@ -12,16 +12,16 @@ module.exports =
 	instructions: commonImg.instructions
 
 	gettingStartedLink:
-		windows: 'https://www.balena.io/docs/learn/getting-started/smarc-px30/nodejs/'
-		osx: 'https://www.balena.io/docs/learn/getting-started/smarc-px30/nodejs/'
-		linux: 'https://www.balena.io/docs/learn/getting-started/smarc-px30/nodejs/'
+		windows: 'https://www.balena.io/docs/learn/getting-started/bobcat-px30/nodejs/'
+		osx: 'https://www.balena.io/docs/learn/getting-started/bobcat-px30/nodejs/'
+		linux: 'https://www.balena.io/docs/learn/getting-started/bobcat-px30/nodejs/'
 
 	yocto:
-		machine: 'smarc-px30'
+		machine: 'bobcat-px30'
 		image: 'balena-image'
 		fstype: 'balenaos-img'
 		version: 'yocto-thud'
-		deployArtifact: 'balena-image-smarc-px30.balenaos-img'
+		deployArtifact: 'balena-image-bobcat-px30.balenaos-img'
 		compressed: true
 
 	options: [ networkOptions.group ]
