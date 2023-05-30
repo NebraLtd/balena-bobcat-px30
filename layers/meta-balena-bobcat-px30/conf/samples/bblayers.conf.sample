@@ -9,7 +9,7 @@ BBLAYERS ?= " \
     ${TOPDIR}/../layers/meta-balena/meta-balena-rust \
     ${TOPDIR}/../layers/meta-balena/meta-balena-common \
     ${TOPDIR}/../layers/meta-balena/meta-balena-thud \
-    ${TOPDIR}/../layers/meta-balena-bobcat-px30 \
+    ${TOPDIR}/../layers/meta-balena-nanopc-t4 \
     ${TOPDIR}/../layers/poky/meta \
     ${TOPDIR}/../layers/poky/meta-poky \
     ${TOPDIR}/../layers/meta-openembedded/meta-oe \
@@ -17,4 +17,5 @@ BBLAYERS ?= " \
     ${TOPDIR}/../layers/meta-openembedded/meta-networking \
     ${TOPDIR}/../layers/meta-openembedded/meta-python \
     ${TOPDIR}/../layers/meta-openembedded/meta-perl \
+    ${TOPDIR}/../layers/meta-nanopc-t4 \
     "

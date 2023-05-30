@@ -1,5 +1,5 @@
-SUMMARY = "Bobcat-PX30 kernel"
-DESCRIPTION = "Bobcat-PX30 kernel"
+SUMMARY = "LEC-PX30 kernel"
+DESCRIPTION = "ADLINK iPi LEC-PX30 kernel"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/files/4.4.185:"
 
@@ -19,7 +19,7 @@ S = "${WORKDIR}/git"
 
 KCONFIG_MODE="--alldefconfig"
 
-COMPATIBLE_MACHINE = "(bobcat-px30)"
+COMPATIBLE_MACHINE = "(lec-px30)"
 
 SRC_URI += " \
         file://defconfig \
@@ -34,3 +34,5 @@ SRC_URI += " \
 
 # Comment the below line to mount file system from eMMC
 # SRC_URI += "file://0008-Modified-Boot-Arguments-to-mount-fileystem-from-SD-c.patch")"
+
+
