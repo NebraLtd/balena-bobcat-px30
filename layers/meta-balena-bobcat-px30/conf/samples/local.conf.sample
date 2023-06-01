@@ -1,19 +1,19 @@
 # Supported machines
-MACHINE ?= "bobcat-px30"
+#MACHINE ?= "bobcat-px30"
 BALENA_STORAGE = "overlay2"
 
-# More info meta-resin/README.md
+# More info meta-balena/README.md
 #TARGET_REPOSITORY ?= ""
 #TARGET_TAG ?= ""
 
-# Set this to 1 if development image is desired
-#DEVELOPMENT_IMAGE = "1"
+# Set this to 1 to disable quiet boot and allow bootloader shell access
+#OS_DEVELOPMENT = "1"
 
 # Set this to make build system generate resinhup bundles
-#RESINHUP ?= "yes"
+#BALENAHUP ?= "yes"
 
 # Set this to change the supervisor tag used
-#TARGET_TAG ?= "master"
+#SUPERVISOR_TAG ?= "master"
 
 # Compress final raw image
 #BALENA_RAW_IMG_COMPRESSION ?= "xz"
@@ -40,7 +40,7 @@ DISTRO ?= "resin-systemd"
 RM_OLD_IMAGE = "1"
 
 # Additional image features
-USER_CLASSES ?= "buildstats image-mklibs image-prelink"
+USER_CLASSES ?= "buildstats"
 
 # By default disable interactive patch resolution (tasks will just fail instead):
 PATCHRESOLVE = "noop"
@@ -50,10 +50,10 @@ BB_DISKMON_DIRS = "\
     STOPTASKS,${TMPDIR},1G,100K \
     STOPTASKS,${DL_DIR},1G,100K \
     STOPTASKS,${SSTATE_DIR},1G,100K \
-    ABORT,${TMPDIR},100M,1K \
-    ABORT,${DL_DIR},100M,1K \
-    ABORT,${SSTATE_DIR},100M,1K"
+    HALT,${TMPDIR},100M,1K \
+    HALT,${DL_DIR},100M,1K \
+    HALT,${SSTATE_DIR},100M,1K"
 
-CONF_VERSION = "1"
+CONF_VERSION = "2"
 
 HOSTTOOLS += "docker iptables"
