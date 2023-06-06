@@ -36,7 +36,7 @@ module.exports =
 	options: [ networkOptions.group ]
 
 	yocto:
-		machine: bobcat-px30'
+		machine: 'bobcat-px30'
 		image: 'balena-image-flasher'
 		fstype: 'balenaos-img'
 		version: 'yocto-kirkstone'
