@@ -21,7 +21,7 @@ index 4103342d42..fb1561aee4 100644
 +	"run set_os_cmdline;" \
 +	"setenv bootargs ${resin_kernel_root} rootwait console=ttyFIQ0,1500000 console=ttyFIQ0  ${os_cmdline} panic=10 loglevel=7;" \
 +	"load mmc ${resin_dev_index}:${resin_root_part} ${kernel_addr_r} /boot/Image;" \
-+	"load mmc ${resin_dev_index}:${resin_root_part} ${fdt_addr_r} /boot/px30-evb-ddr3-v10-linux.dtb;" \
++	"load mmc ${resin_dev_index}:${resin_root_part} ${fdt_addr_r} /boot/px30-bobcat.dtb;" \
 +	"booti ${kernel_addr_r} - ${fdt_addr_r}"
 +
  

@@ -11,13 +11,13 @@ SRC_URI:remove = "file://resin-specific-env-integration-kconfig.patch"
 SRC_URI:append = " \
 	file://0001-rocktech-Makefile.patch\
 	file://0002-rocktech-arch.patch \
-	file://0003-rocktech-evb.patch \
+	file://0003-boot-cmd.patch \
 	file://0004-rocktech-config.patch \
 	file://0005-rocktech-dts.patch \
 	file://0006-rocktech-part.patch \
 	file://0001-Integrate-with-Balena-u-boot-environment.patch \
-    file://0002-fat-Fix-sporadic-file-write-failure-when-saving-boot.patch \
-    file://0001-Revert-cmd-nvedit-add-0x-prefix-for-hex-value.patch \
+	file://0002-fat-Fix-sporadic-file-write-failure-when-saving-boot.patch \
+	file://0001-Revert-cmd-nvedit-add-0x-prefix-for-hex-value.patch \
 	file://0007-rocktech-scripts.patch \
 "
 
