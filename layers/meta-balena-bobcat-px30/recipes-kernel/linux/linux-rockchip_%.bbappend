@@ -1,8 +1,15 @@
-inherit kernel-resin deploy
+inherit kernel-balena deploy
 
-# Fix module build on this 4.4 kernel
-BALENA_CONFIGS_append_bobcat-px30 = " ccstackprotector"
-BALENA_CONFIGS[ccstackprotector] = " \
-    CONFIG_CC_STACKPROTECTOR_NONE=y \
-    CONFIG_CC_STACKPROTECTOR_STRONG=n \
-"
+
+#FILESEXTRAPATHS:prepend := "${THISDIR}/linux-rockchip:"
+
+#SRC_URI += " \ 
+#	file://0004-recktech-modify_ttyName.patch \
+#"
+
+KERNEL_IMAGETYPES:remove = "${ROCKCHIP_KERNEL_IMAGES}"
+
+python () {
+    # revert variable set in rockchip BSP
+    d.setVar('KERNEL_IMAGETYPE_FOR_MAKE', d.getVar('KERNEL_IMAGETYPES'));
+}

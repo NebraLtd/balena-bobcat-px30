@@ -1,25 +1,24 @@
-DESCRIPTION = "FriendlyElec NanoPC-T4 U-Boot"
+DESCRIPTION = "Rocktech Bobcat PX30 U-Boot"
 LICENSE = "GPLv2+"
-LIC_FILES_CHKSUM = "file://Licenses/README;md5=30503fd321432fc713238f582193b78e"
+LIC_FILES_CHKSUM = "file://Licenses/README;md5=a2c678cfd4a4d97135585cad908541c6"
+require u-boot-rockchip.inc
+DEPENDS += "bison-native"
 
-require recipes-bsp/u-boot/u-boot.inc
-
-DEPENDS_append = " bison-native rkbin "
 
 SRC_URI = " \
-    git://github.com/u-boot/u-boot;protocol=https \
+    git://github.com/rockchip-linux/u-boot.git;protocol=https;branch=next-dev \
 "
+
+SRCREV = "65c356141d79b7380748344d558b3871061c907a"
 
 S = "${WORKDIR}/git"
 
-do_install_append() {
+do_install:append() {
     install -d ${D}/boot
     install -c -m 0644 ${B}/idbloader.bin ${B}/uboot.img ${D}/boot
 }
 
-do_deploy_append() {
+do_deploy:append() {
     install ${B}/idbloader.bin ${DEPLOYDIR}
     install ${B}/uboot.img ${DEPLOYDIR}
 }
-
-do_compile[depends] += "rkbin:do_deploy"
