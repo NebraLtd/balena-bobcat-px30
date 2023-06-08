@@ -72,20 +72,9 @@ diff -uNr --no-dereference kernel-source/arch/arm64/boot/dts/rockchip/px30-bobca
 +		};
 +	};
 +
-+	power-led {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&work_led>;
-+		green{
-+			gpios = <&gpio3 6 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+
-+       rocktech_gpio:rocktech_gpio{
-+                compatible="fsl,rocktech_gpio";
-+	        status = "okay";
++    rocktech_gpio:rocktech_gpio {
++        compatible="fsl,rocktech_gpio";
++        status = "okay";
 +	};
 +
 +	charge-animation {
@@ -118,30 +107,6 @@ diff -uNr --no-dereference kernel-source/arch/arm64/boot/dts/rockchip/px30-bobca
 +		};
 +	};
 +
-+	rk_headset: rk-headset {
-+		compatible = "rockchip_headset";
-+		headset_gpio = <&gpio2 RK_PB0 GPIO_ACTIVE_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&hp_det>;
-+		io-channels = <&saradc 1>;
-+	};
-+
-+	sdio_pwrseq: sdio-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		clocks = <&rk809 1>;
-+		clock-names = "ext_clock";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&wifi_enable_h>;
-+
-+		/*
-+		 * On the module itself this is one of these (depending
-+		 * on the actual card populated):
-+		 * - SDIO_RESET_L_WL_REG_ON
-+		 * - PDN (power down when low)
-+		 */
-+		reset-gpios = <&gpio3 RK_PB0 GPIO_ACTIVE_LOW>; /* GPIO3_A4 */
-+	};
-+
 +	vcc_phy: vcc-phy-regulator {
 +		compatible = "regulator-fixed";
 +		regulator-name = "vcc_phy";
@@ -169,7 +134,7 @@ diff -uNr --no-dereference kernel-source/arch/arm64/boot/dts/rockchip/px30-bobca
 +		status = "okay";
 +	};
 +
-+	wireless-bluetooth {
++/*	wireless-bluetooth {
 +		compatible = "bluetooth-platdata";
 +		clocks = <&rk809 1>;
 +		clock-names = "ext_clock";
@@ -182,49 +147,49 @@ diff -uNr --no-dereference kernel-source/arch/arm64/boot/dts/rockchip/px30-bobca
 +		BT,wake_host_irq = <&gpio1 RK_PB0 GPIO_ACTIVE_HIGH>;
 +		status = "okay";
 +	};
++	*/
 +};
 +
 +&display_subsystem {
 +	status = "okay";
 +};
-+&rocktech_gpio{
++
++&rocktech_gpio {
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&gpio_pins>;
-+	gpio_01{
++	gpio_01 {
 +		 label="gpio_one";
 +		 gpios = <&gpio3 14 1>;
 +	};
-+	gpio_02{
++	gpio_02 {
 +		 label="gpio_two";
 +		 gpios = <&gpio3 12 1>;
 +	};
-+	gpio_03{
++	gpio_03 {
 +		 label="gpio_three";
 +		 gpios = <&gpio3 15 1>;
 +	};
-+	gpio_04{
++	gpio_04 {
 +		 label="gpio_four";
 +		 gpios = <&gpio3 9 1>;
 +	};
-+	gpio_05{
++	gpio_05 {
 +		label="mpcie_pwr";
 +		gpios = <&gpio3 22 1>;
 +	};
-+	gpio_06{
++	gpio_06 {
 +		label="mpcie_rst";
 +		gpios = <&gpio3 21 1>;
 +	};
-+	gpio_07{
++	gpio_07 {
 +		label="sim_det";
 +		gpios = <&gpio0 13 1>;
 +	};
-+	gpio_08{
-+                label="mpcie_wake";
-+                gpios = <&gpio3 19 1>;
++	gpio_08 {
++        label="mpcie_wake";
++        gpios = <&gpio3 19 1>;
 +	};
 +};
-+
-+
 +
 +&bus_apll {
 +	bus-supply = <&vdd_logic>;
@@ -272,6 +237,27 @@ diff -uNr --no-dereference kernel-source/arch/arm64/boot/dts/rockchip/px30-bobca
 +&gpu {
 +	mali-supply = <&vdd_logic>;
 +	status = "okay";
++};
++
++&spi0 {
++    status = "okay";
++    max-freq = <48000000>;
++    spidev@0 {
++        status = "okay";
++        compatible = "rockchip,spidev";
++        reg = <0>;
++    };
++};
++
++&spi1 {
++    status = "okay";
++    max-freq = <50000000>;
++    spidev@0 {
++        status = "okay";
++        compatible = "rockchip,spidev";
++        reg = <0>;
++        spi-lsb-first;
++    };
 +};
 +
 +&i2c0 {
@@ -739,20 +725,6 @@ diff -uNr --no-dereference kernel-source/arch/arm64/boot/dts/rockchip/px30-bobca
 +	status = "okay";
 +};
 +
-+&sdio {
-+	max-frequency = <20000000>;
-+	supports-sdio;
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	cap-sdio-irq;
-+	keep-power-in-suspend;
-+	disable-wp;
-+	mmc-pwrseq = <&sdio_pwrseq>;
-+	non-removable;
-+	num-slots = <1>;
-+	status = "okay";
-+};
-+
 +&tsadc {
 +	pinctrl-names = "gpio", "otpout";
 +	pinctrl-0 = <&tsadc_otp_gpio>;
@@ -770,15 +742,15 @@ diff -uNr --no-dereference kernel-source/arch/arm64/boot/dts/rockchip/px30-bobca
 +	status = "okay";
 +};
 +
-+&uart2{
++&uart2 {
 +	status = "disabled";
 +};
 +
-+&uart3{
++&uart3 {
 +	status = "okay";
 +};
 +
-+&uart5{
++&uart5 {
 +	status = "okay";
 +};
 +
@@ -891,22 +863,38 @@ diff -uNr --no-dereference kernel-source/arch/arm64/boot/dts/rockchip/px30-bobca
 +		};
 +	};
 +
-+	wireless-bluetooth {
-+		uart1_rts_gpios: uart0-gpios {
-+			rockchip,pins =
-+				<1 19 RK_FUNC_GPIO &pcfg_pull_none>;
-+			     };
-+	};
-+	sdio-pwrseq {
-+		wifi_enable_h: wifi-enable-h {
-+			rockchip,pins = <3 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
 +	wireless-wlan {
-+		wifi_reg_on: wifi-reg-on {
-+			rockchip,pins =
-+				<1 RK_PB7 RK_FUNC_GPIO &pcfg_pull_none>;
-+			     };
++		compatible = "wlan-platdata";
++		wifi_chip_type = "NM372";
++		pinctrl-0 = <0xc4>;
++		WIFI,host_wake_irq = <&gpio0 0x0f 0x00>;
++		status = "okay";
 +	};
 +
++	wireless-bluetooth {
++		compatible = "bluetooth-platdata";
++		clocks = <0xc5 0x01>;
++		clock-names = "ext_clock";
++		uart_rts_gpios = <&gpio1 0x13 0x01>;
++		pinctrl-names = "default", "rts_gpio";
++		pinctrl-0 = <0xc7>;
++		pinctrl-1 = <0xc8>;
++		BT,wake_gpio = <&gpio0 0x01 0x00>;
++		BT,reset_gpio = <&gpio2 0x08 0x00>;
++		BT,wake_host_irq = <&gpio0 0x0b 0x00>;
++		status = "okay";
++	};
++
++	sdio-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		pinctrl-names = "default";
++		pinctrl-0 = <0xc2>;
++		reset-gpios = <0x5e 0x02 0x01>;
++		phandle = <0x9a>;
++	
++		wifi_enable_h: wifi-enable-h {
++			rockchip,pins = <0x00 0x02 0x00 0xb5>;
++			phandle = <0xc2>;
++		};
++	};
 +};
