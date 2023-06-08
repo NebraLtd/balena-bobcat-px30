@@ -11,6 +11,7 @@ SRCREV = "a4423c56f430bfc7c75dbb68d4a9a1a0ef62b371"
 SRC_URI = " \ 
 	git://github.com/rockchip-linux/kernel.git;protocol=https;branch=develop-5.10 \
 	file://${THISDIR}/files/cgroups.cfg \
+        file://${THISDIR}/files/extra.cfg  \
 	"
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
