@@ -1,6 +1,6 @@
 --- orig/arch/arm64/boot/dts/rockchip/px30-bobcat.dts	1970-01-01 02:00:00.000000000 +0200
-+++ patched/arch/arm64/boot/dts/rockchip/px30-bobcat.dts	2023-06-09 11:17:02.695135644 +0300
-@@ -0,0 +1,866 @@
++++ patched/arch/arm64/boot/dts/rockchip/px30-bobcat.dts	2023-06-20 19:57:52.488682518 +0300
+@@ -0,0 +1,790 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +/*
 + * Copyright (c) 2021 Fuzhou Rockchip Electronics Co., Ltd
@@ -16,7 +16,7 @@
 +#include "rk3326-linux.dtsi"
 +
 +/ {
-+	model = "Rockchip linux PX30 evb ddr3 board";
++	model = "Bobcat PX30";
 +	compatible = "rockchip,px30-evb-ddr3-v10-linux", "rockchip,px30";
 +	aliases {
 +		mmc0 = &sdmmc;
@@ -130,8 +130,8 @@
 +	wireless-wlan {
 +		compatible = "wlan-platdata";
 +		wifi_chip_type = "NM372";
-+		pinctrl-0 = <0xc4>;
-+		WIFI,host_wake_irq = <&gpio0 0x0f GPIO_ACTIVE_HIGH>;
++		pinctrl-0 = <&wifi_wake_host>;
++		WIFI,host_wake_irq = <&gpio0 RK_PB7 GPIO_ACTIVE_HIGH>;
 +		status = "okay";
 +	};
 +
@@ -148,10 +148,6 @@
 +		BT,wake_host_irq = <&gpio0 0x0b 0x00>;
 +		status = "okay";
 +	};
-+};
-+
-+&display_subsystem {
-+	status = "okay";
 +};
 +
 +&rocktech_gpio {
@@ -464,11 +460,12 @@
 +			};
 +
 +			vcc1v8_dvp: LDO_REG8 {
++    			regulator-always-on;
 +				regulator-boot-on;
 +				regulator-min-microvolt = <1800000>;
 +				regulator-max-microvolt = <1800000>;
 +
-+				regulator-name = "vcc1v8_dvp";
++				regulator-name = "vcc1v8_uar1";
 +				regulator-state-mem {
 +					regulator-on-in-suspend;
 +					regulator-suspend-microvolt = <1800000>;
@@ -548,16 +545,6 @@
 +		status = "okay";
 +
 +	};
-+	sensor@48 {
-+		compatible = "rocktech,temp-mcp9800";
-+		reg = <0x48>;
-+//		type = <SENSOR_TYPE_TEMPERATURE>;
-+//		poll_delay_ms = <60>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&temp_int>;
-+		temp_int_gpio = <&gpio0 15 GPIO_ACTIVE_HIGH>;
-+		status = "okay";
-+	};
 +	/*gt1x: gt1x@14 {
 +		compatible = "goodix,gt1x";
 +		reg = <0x14>;
@@ -588,28 +575,6 @@
 +	/* These are relatively safe rise/fall times; TODO: measure */
 +	i2c-scl-falling-time-ns = <50>;
 +	i2c-scl-rising-time-ns = <300>;
-+
-+	ov5695: ov5695@36 {
-+		compatible = "ovti,ov5695";
-+		reg = <0x36>;
-+		clocks = <&cru SCLK_CIF_OUT>;
-+		clock-names = "xvclk";
-+
-+		avdd-supply = <&vcc2v8_dvp>;
-+		dovdd-supply = <&vcc1v8_dvp>;
-+		dvdd-supply = <&vdd1v5_dvp>;
-+
-+		/*reset-gpios = <&gpio2 14 GPIO_ACTIVE_HIGH>;*/
-+		pwdn-gpios = <&gpio2 14 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&cif_clkout_m0>;
-+		port {
-+			ucam_out: endpoint {
-+				remote-endpoint = <&mipi_in_ucam>;
-+				data-lanes = <1 2>;
-+			};
-+		};
-+	};
 +};
 +
 +&i2s1_2ch {
@@ -631,38 +596,6 @@
 +	status = "okay";
 +};
 +
-+&mipi_dphy_rx0 {
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			mipi_in_ucam: endpoint@1 {
-+				reg = <1>;
-+				remote-endpoint = <&ucam_out>;
-+				data-lanes = <1 2>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			dphy_rx0_out: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&isp0_mipi_in>;
-+			};
-+		};
-+	};
-+};
-+
 +&nandc0 {
 +	status = "okay";
 +};
@@ -677,20 +610,6 @@
 +
 +&rk_rga {
 +	status = "okay";
-+};
-+
-+&rkisp1 {
-+	status = "okay";
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		isp0_mipi_in: endpoint@0 {
-+			reg = <0>;
-+			remote-endpoint = <&dphy_rx0_out>;
-+		};
-+	};
 +};
 +
 +&rockchip_suspend {
@@ -728,14 +647,16 @@
 +&sdio {
 +	bus-width = <4>;
 +	cap-sd-highspeed;
-+	no-sd;
-+	no-mmc;
++	cap-sdio-irq;
++	supports-sdio;
 +	ignore-pm-notify;
 +	keep-power-in-suspend;
-+	non-removable;
++    rockchip,default-sample-phase = <0x5a>;
 +	mmc-pwrseq = <&sdio_pwrseq>;
 +	sd-uhs-sdr104;
 +	status = "okay";
++	assigned-clocks = <&cru SCLK_SDIO>;
++	assigned-clock-parents = <&cru SCLK_SDIO_DIV50>;
 +};
 +
 +&tsadc {
@@ -814,7 +735,7 @@
 +	};
 +
 +
-+	gpiopin{
++	gpiopin {
 +		gpio_pins: gpio-pins {
 +			rockchip,pins =
 +				<3 14 RK_FUNC_GPIO &pcfg_pull_none>,/* io0 */
@@ -830,13 +751,8 @@
 +
 +	rtc {
 +		rtc_int: rtc-int {
-+				rockchip,pins = <3 18 RK_FUNC_GPIO &pcfg_pull_up>;
-+			 };
-+	};
-+	temp {
-+		temp_int: temp-int {
-+				rockchip,pins = <0 15 RK_FUNC_GPIO &pcfg_pull_up>;
-+			 };
++			rockchip,pins = <3 18 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
 +	};
 +	pmic {
 +		pmic_int: pmic_int {
@@ -865,5 +781,13 @@
 +			rockchip,pins = <0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
 +		};
 +	};
++	wireless-wlan {
++		wifi_wake_host: wifi-wake-host {
++			rockchip,pins = <0 RK_PB7 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
 +};
 +
++&video_phy {
++	status = "disabled";
++};
