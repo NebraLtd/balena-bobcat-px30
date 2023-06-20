@@ -1,0 +1,26 @@
+diff -uNr orig/drivers/net/wireless/rockchip_wlan/cywdhd/bcmdhd/dhd_linux.c patched/drivers/net/wireless/rockchip_wlan/cywdhd/bcmdhd/dhd_linux.c
+--- orig/drivers/net/wireless/rockchip_wlan/cywdhd/bcmdhd/dhd_linux.c	2022-07-25 10:15:14.000000000 +0300
++++ patched/drivers/net/wireless/rockchip_wlan/cywdhd/bcmdhd/dhd_linux.c	2023-06-25 15:20:25.628590275 +0300
+@@ -7767,8 +7767,8 @@
+ char fw_path[1024] = {0};
+ char nv_path[1024] = {0};
+ 
+-#define DEFAULT_BCMDHD_FW_PATH "/system/etc/firmware/"
+-#define DEFAULT_BCMDHD_NVRAM_PATH "/system/etc/firmware/"
++#define DEFAULT_BCMDHD_FW_PATH "/lib/firmware/"
++#define DEFAULT_BCMDHD_NVRAM_PATH "/lib/firmware/"
+ 
+ #define FW_CYW43364 "fw_cyw43364.bin"
+ #define FW_CYW43438 "fw_cyw43438.bin"
+diff -uNr orig/drivers/net/wireless/rockchip_wlan/rkwifi/rk_wifi_config.c patched/drivers/net/wireless/rockchip_wlan/rkwifi/rk_wifi_config.c
+--- orig/drivers/net/wireless/rockchip_wlan/rkwifi/rk_wifi_config.c	2022-07-25 10:15:14.000000000 +0300
++++ patched/drivers/net/wireless/rockchip_wlan/rkwifi/rk_wifi_config.c	2023-06-25 19:36:45.383758180 +0300
+@@ -18,7 +18,7 @@
+  */
+  
+ #define VENDOR_ETC_FIRMWARE "/vendor/etc/firmware/"
+-#define SYSTEM_ETC_FIRMWARE "/system/etc/firmware/"
++#define SYSTEM_ETC_FIRMWARE "/lib/firmware/"
+ char ANDROID_FW_PATH[64] = {0};
+ 
+ extern int get_wifi_chip_type(void);
