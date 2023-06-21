@@ -22,3 +22,5 @@ do_install() {
 FILES:${PN} += "/usr/sbin/board-init.sh"
 
 SYSTEMD_SERVICE:${PN} = "board-init.service"
+
+RDEPENDS:${PN} += "bash"
