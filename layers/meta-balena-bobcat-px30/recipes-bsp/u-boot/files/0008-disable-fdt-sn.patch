@@ -1,0 +1,8 @@
+diff -uNr u-boot-orig/configs/evb-px30_defconfig u-boot-patched/configs/evb-px30_defconfig
+--- u-boot-orig/configs/evb-px30_defconfig	2023-07-17 22:45:54.294449958 +0300
++++ u-boot-patched/configs/evb-px30_defconfig	2023-07-17 22:46:37.190700675 +0300
+@@ -132,3 +132,4 @@
+ CONFIG_OPTEE_CLIENT=y
+ CONFIG_OPTEE_V2=y
+ CONFIG_TEST_ROCKCHIP=y
++CONFIG_PASS_DEVICE_SERIAL_BY_FDT=n

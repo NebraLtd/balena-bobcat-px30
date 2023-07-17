@@ -11,6 +11,7 @@ SRC_URI = " \
 	git://github.com/JeffyCN/mirrors.git;protocol=https;nobranch=1;branch=kernel-4.4-2022_11_23; \
 	file://${THISDIR}/files/add-px30-bobcat-dts.patch \
 	file://${THISDIR}/files/adjust-firmware-path.patch \
+	file://${THISDIR}/files/add-sysfssn-module.patch \
 	file://${THISDIR}/files/cgroups.cfg \
 "
 

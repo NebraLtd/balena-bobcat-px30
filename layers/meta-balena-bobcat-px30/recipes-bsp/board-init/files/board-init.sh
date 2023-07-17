@@ -17,6 +17,9 @@ function make_mac_addr() {
     echo ${MAC_ADDR_PREFIX}${mac_part}
 }
 
+# Expose serial number via /sys/devices/soc0/serial_number
+modprobe sysfssn
+
 # LoRa concentrator power
 set_gpio 103 1
 

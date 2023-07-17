@@ -19,6 +19,7 @@ SRC_URI:append = " \
 	file://0002-fat-Fix-sporadic-file-write-failure-when-saving-boot.patch \
 	file://0001-Revert-cmd-nvedit-add-0x-prefix-for-hex-value.patch \
 	file://0007-rocktech-scripts.patch \
+	file://0008-disable-fdt-sn.patch \
 "
 
 
