@@ -1,0 +1,66 @@
+diff -uNr orig/drivers/base/core.c patched/drivers/base/core.c
+--- orig/drivers/base/core.c	2022-07-25 10:15:14.000000000 +0300
++++ patched/drivers/base/core.c	2023-07-17 22:43:34.122490137 +0300
+@@ -532,6 +532,7 @@
+ 
+ /* /sys/devices/ */
+ struct kset *devices_kset;
++EXPORT_SYMBOL(devices_kset);
+ 
+ /**
+  * devices_kset_move_before - Move device in the devices_kset's list.
+diff -uNr orig/drivers/base/Makefile patched/drivers/base/Makefile
+--- orig/drivers/base/Makefile	2022-07-25 10:15:14.000000000 +0300
++++ patched/drivers/base/Makefile	2023-07-17 22:43:07.276089401 +0300
+@@ -27,3 +27,4 @@
+ 
+ ccflags-$(CONFIG_DEBUG_DRIVER) := -DDEBUG
+ 
++obj-m += sysfssn.o
+diff -uNr orig/drivers/base/sysfssn.c patched/drivers/base/sysfssn.c
+--- orig/drivers/base/sysfssn.c	1970-01-01 02:00:00.000000000 +0200
++++ patched/drivers/base/sysfssn.c	2023-07-17 22:42:41.589678173 +0300
+@@ -0,0 +1,43 @@
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/uaccess.h>
++#include <linux/fs.h>
++#include <linux/proc_fs.h>
++#include <linux/string.h>
++#include <linux/device.h>
++#include <asm/system_info.h>
++
++#include "base.h"
++
++
++MODULE_AUTHOR("Calin Crisan");
++MODULE_DESCRIPTION("Expose serial number via sysfs");
++MODULE_LICENSE("GPL");
++
++static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf) {
++    return sprintf(buf, "%08x%08x", system_serial_high, system_serial_low);
++}
++
++static ssize_t sysfs_store(struct kobject *kobj, struct kobj_attribute *attr,const char *buf, size_t count) {
++    return 0;
++}
++
++struct kobject *kobj_ref;
++struct kobj_attribute sn_attr = __ATTR(serial_number, 0660, sysfs_show, sysfs_store);
++
++static int __init sn_driver_init(void) {
++    printk(KERN_INFO "SysFSSN loading");
++    kobj_ref = kobject_create_and_add("soc0", &devices_kset->kobj);
++    sysfs_create_file(kobj_ref, &sn_attr.attr);
++
++    return 0;
++}
++
++static void __exit sn_driver_exit(void) {
++        kobject_put(kobj_ref);
++        sysfs_remove_file(kernel_kobj, &sn_attr.attr);
++        printk(KERN_INFO "SysFSSN unloaded");
++}
++
++module_init(sn_driver_init);
++module_exit(sn_driver_exit);
